@@ -33,7 +33,14 @@ determineStatus (ExitFailure 2) = Critical
 determineStatus _ = undefined -- TODO Handling things outside of scope?
 
 parseNagiosOutput :: ExitCode -> String -> Response
-parseNagiosOutput code stdout = Response (determineStatus code) stdout [] -- TODO Parse output
+parseNagiosOutput code stdout =
+	let
+		status = determineStatus code
+		(description, metrics) = parseNagiosOutput2 stdout
+	in Response status description metrics -- TODO Parse output
+
+parseNagiosOutput2 :: String -> (String, [Metric])
+parseNagiosOutput2 = undefined
 
 commandThread :: BC.BoundedChan Response -> Command -> IO ThreadId
 commandThread channel command = do
