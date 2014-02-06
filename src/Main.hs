@@ -3,6 +3,7 @@ module Main where
 import Control.Concurrent
 import Control.Monad
 import qualified Control.Concurrent.BoundedChan as BC
+import GHC.IO.Exception
 import System.Process
 
 main = do
@@ -22,8 +23,14 @@ main = do
 
 runCheck :: Command -> IO Response
 runCheck (ExternalCommand fp) = do 
-									output <- readProcess fp [] ""
-									return (Response Ok output []) -- TODO Parse output
+									(code, stdout, _) <- readProcessWithExitCode fp [] ""
+									return (Response (determineStatus code) stdout []) -- TODO Parse output
+
+determineStatus :: ExitCode -> Status
+determineStatus ExitSuccess = Ok
+determineStatus (ExitFailure 1) = Warning
+determineStatus (ExitFailure 2) = Critical
+determineStatus _ = undefined -- TODO Handling things outside of scope?
 
 commandThread :: BC.BoundedChan Response -> Command -> IO ThreadId
 commandThread channel command = do
