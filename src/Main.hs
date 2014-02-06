@@ -22,7 +22,7 @@ main = do
 			forever $ threadDelay 1000 -- FIXME Block forever hack
 
 runCheck :: Command -> IO Response
-runCheck (ExternalCommand fp) = do 
+runCheck (NagiosPlugin fp) = do
 									(code, stdout, _) <- readProcessWithExitCode fp [] ""
 									return (Response (determineStatus code) stdout []) -- TODO Parse output
 
@@ -43,11 +43,11 @@ commandThread channel command = do
 
 type LuxConfig = [Command] -- FIXME
 
-data Command = ExternalCommand FilePath 
+data Command = NagiosPlugin FilePath
 --			 | InternalCommand (IO Response)
 
 dummyCommands :: [Command]
-dummyCommands = [ExternalCommand "/usr/bin/uptime"]
+dummyCommands = [NagiosPlugin "/usr/bin/uptime"]
 
 channelSize :: Int
 channelSize = 10
