@@ -24,13 +24,16 @@ main = do
 runCheck :: Command -> IO Response
 runCheck (NagiosPlugin fp) = do
 									(code, stdout, _) <- readProcessWithExitCode fp [] ""
-									return (Response (determineStatus code) stdout []) -- TODO Parse output
+									return $ parseNagiosOutput code stdout
 
 determineStatus :: ExitCode -> Status
 determineStatus ExitSuccess = Ok
 determineStatus (ExitFailure 1) = Warning
 determineStatus (ExitFailure 2) = Critical
 determineStatus _ = undefined -- TODO Handling things outside of scope?
+
+parseNagiosOutput :: ExitCode -> String -> Response
+parseNagiosOutput code stdout = Response (determineStatus code) stdout [] -- TODO Parse output
 
 commandThread :: BC.BoundedChan Response -> Command -> IO ThreadId
 commandThread channel command = do
