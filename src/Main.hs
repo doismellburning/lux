@@ -3,6 +3,7 @@ module Main where
 import Control.Concurrent
 import Control.Monad
 import qualified Control.Concurrent.BoundedChan as BC
+import Data.Text
 import GHC.IO.Exception
 import System.Process
 
@@ -37,10 +38,13 @@ parseNagiosOutput code stdout =
 	let
 		status = determineStatus code
 		(description, metrics) = parseNagiosOutput2 stdout
-	in Response status description metrics -- TODO Parse output
+	in Response status description metrics
 
 parseNagiosOutput2 :: String -> (String, [Metric])
-parseNagiosOutput2 = undefined
+parseNagiosOutput2 stdout =
+	let
+		description = (unpack . strip . pack) stdout
+	in (description, [])
 
 commandThread :: BC.BoundedChan Response -> Command -> IO ThreadId
 commandThread channel command = do
