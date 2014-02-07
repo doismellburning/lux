@@ -26,6 +26,10 @@ Just place (or symlink) any existing Nagios plugins into `${plugin_dir}/nagios/`
 
 ### Munin Plugins
 
+Drop your Munin plugins into `${plugin_dir}/munin/` and lux will use them as per http://munin-monitoring.org/wiki/PluginConcise and http://munin-monitoring.org/wiki/protocol-config, subject to the following caveats:
+
+* All graph-drawing-related attributes will be ignored
+
 ### Lux Standalone Plugins
 
 A standalone plugin is, much like a Nagios plugin, an independent runnable, written in any appropriate language, that conforms to the following specification:
