@@ -1,8 +1,10 @@
-module Main where
+module Lux.Main where
 
 import Control.Concurrent
 import Control.Monad
 import qualified Control.Concurrent.BoundedChan as BC
+import Data.Text
+import GHC.IO.Exception
 import System.Process
 
 main = do
@@ -21,9 +23,28 @@ main = do
 			forever $ threadDelay 1000 -- FIXME Block forever hack
 
 runCheck :: Command -> IO Response
-runCheck (ExternalCommand fp) = do 
-									output <- readProcess fp [] ""
-									return (Response Ok output []) -- TODO Parse output
+runCheck (NagiosPlugin fp) = do
+									(code, stdout, _) <- readProcessWithExitCode fp [] ""
+									return $ parseNagiosOutput code stdout
+
+determineStatus :: ExitCode -> Status
+determineStatus ExitSuccess = Ok
+determineStatus (ExitFailure 1) = Warning
+determineStatus (ExitFailure 2) = Critical
+determineStatus _ = undefined -- TODO Handling things outside of scope?
+
+parseNagiosOutput :: ExitCode -> String -> Response
+parseNagiosOutput code stdout =
+	let
+		status = determineStatus code
+		(description, metrics) = parseNagiosOutput2 stdout
+	in Response status description metrics
+
+parseNagiosOutput2 :: String -> (String, [Metric])
+parseNagiosOutput2 stdout =
+	let
+		description = (unpack . strip . pack) stdout
+	in (description, [])
 
 commandThread :: BC.BoundedChan Response -> Command -> IO ThreadId
 commandThread channel command = do
@@ -36,11 +57,11 @@ commandThread channel command = do
 
 type LuxConfig = [Command] -- FIXME
 
-data Command = ExternalCommand FilePath 
+data Command = NagiosPlugin FilePath
 --			 | InternalCommand (IO Response)
 
 dummyCommands :: [Command]
-dummyCommands = [ExternalCommand "/usr/bin/uptime"]
+dummyCommands = [NagiosPlugin "/usr/bin/uptime"]
 
 channelSize :: Int
 channelSize = 10
@@ -52,6 +73,6 @@ data Status = Ok
 type Description = String
 type MetricKey = String
 type MetricValue = Float
-data Metric = Metric MetricKey MetricValue deriving (Show)
+data Metric = Metric MetricKey MetricValue deriving (Eq, Show)
 data Response = Response Status Description [Metric] deriving (Show)
 
