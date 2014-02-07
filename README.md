@@ -20,6 +20,8 @@ Lux supports multiple types of plugin, for easy integration with existing system
 
 The aim is for compatibility with [Nagios plugins](http://nagios.sourceforge.net/docs/3_0/pluginapi.html) and [Sensu checks](http://sensuapp.org/docs/0.11/checks).
 
+Just place (or symlink) any existing Nagios plugins into `${plugin_dir}/nagios/` and lux will pick them up.
+
 ### Collectd Plugins
 
 ### Munin Plugins
