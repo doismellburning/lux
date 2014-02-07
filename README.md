@@ -4,6 +4,8 @@ Lux shines a light on your systems.
 
 Used collectd? Used sensu? Bit like them.
 
+*Nota bene*: Lux is currently pre-release. This README should be treated as part proposal, and not purely documentation - anything described below may not work correctly, be finished, or even exist, 'til version 1.
+
 ## Details
 
 Run lux-client on each of your nodes. It runs "metrics" and "checks" sending data to your graphite instance and to your lux-server.
