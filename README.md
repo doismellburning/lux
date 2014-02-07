@@ -39,14 +39,44 @@ A standalone plugin is, much like a Nagios plugin, an independent runnable, writ
     * `1` for `WARNING`
     * `2` for `CRITICAL`
 2. It emits descriptive and/or metric data to `stdout` in the following format:
+    * Defining `r` as "the perl-compatible regular expression `/[A-Za-z.]+ \d+(\.\d+)?/`": (TODO Sharpen this)
+        1. Zero or more lines of text not matching `r` that will make up the description
+        2. Zero or more lines of text matching `r` that will make up the metrics
 
-TODO
+#### Examples of output format
 
-Short desc
-Longer
-met.ric value
+##### Valid
 
-/[A-Za-z.]+ \d+(\.\d+)?/
+```
+Lorem ipsum
+```
+
+```
+Lorem ipsum
+Dolor sit
+Amet
+```
+
+```
+met.ric 1
+```
+
+```
+Lorem ipsum
+Dolor sit
+Amet
+met.ric 1
+```
+
+##### Invalid
+
+```
+Lorem Ipsum
+met.ric 1
+Dolor Sit
+```
+
+(Descriptive text after metric data)
 
 ### Lux Internal Plugins
 
