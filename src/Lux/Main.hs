@@ -1,4 +1,4 @@
-module Main where
+module Lux.Main where
 
 import Control.Concurrent
 import Control.Monad

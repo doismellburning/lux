@@ -13,7 +13,7 @@ extra-source-files:  README.md
 cabal-version:       >=1.10
 
 executable lux
-  main-is:             Main.hs
+  main-is:             Lux/Main.hs
   ghc-options:         -Wall -Werror -fno-warn-missing-signatures
   -- other-modules:       
   -- other-extensions:    
