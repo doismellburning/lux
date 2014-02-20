@@ -1,5 +1,6 @@
 import Test.Hspec
 import Lux.Main hiding (main)
+import Lux.Core
 
 main :: IO ()
 main = hspec $ do
