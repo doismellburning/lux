@@ -24,17 +24,20 @@ main = do
 			forever $ threadDelay 1000 -- FIXME Block forever hack
 
 runCheck :: Command -> IO Response
-runCheck (NagiosPlugin fp) = do
-									(code, stdout, _) <- readProcessWithExitCode fp [] ""
-									return $ parseNagiosOutput code stdout
+runCheck (NagiosPlugin fp) =
+	do
+		(code, stdout, _) <- readProcessWithExitCode fp [] ""
+		return $ parseNagiosOutput code stdout
 
 commandThread :: BC.BoundedChan Response -> Command -> IO ThreadId
-commandThread channel command = do
-									putStrLn $ "Starting input thread for TODO" -- TODO Show
-									forkIO $ forever $ do
-															threadDelay $ 10 * 1000 * 1000
-															result <- runCheck command
-															BC.writeChan channel result
+commandThread channel command =
+	do
+		putStrLn $ "Starting input thread for TODO" -- TODO Show
+		forkIO $ forever $
+			do
+				threadDelay $ 10 * 1000 * 1000
+				result <- runCheck command
+				BC.writeChan channel result
 
 
 type LuxConfig = [Command] -- FIXME
