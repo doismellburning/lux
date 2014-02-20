@@ -10,3 +10,5 @@ type MetricValue = Float
 data Metric = Metric MetricKey MetricValue deriving (Eq, Show)
 data Response = Response Status Description [Metric] deriving (Show)
 
+class Command c where
+	runCheck :: c -> IO Response

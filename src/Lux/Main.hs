@@ -23,12 +23,7 @@ main = do
 			putStrLn "Running"
 			forever $ threadDelay 1000 -- FIXME Block forever hack
 
-runCheck :: Command -> IO Response
-runCheck (NagiosPlugin fp) = do
-									(code, stdout, _) <- readProcessWithExitCode fp [] ""
-									return $ parseNagiosOutput code stdout
-
-commandThread :: BC.BoundedChan Response -> Command -> IO ThreadId
+commandThread :: Command c => BC.BoundedChan Response -> c -> IO ThreadId
 commandThread channel command = do
 									putStrLn $ "Starting input thread for TODO" -- TODO Show
 									forkIO $ forever $ do
@@ -37,12 +32,7 @@ commandThread channel command = do
 															BC.writeChan channel result
 
 
-type LuxConfig = [Command] -- FIXME
-
-data Command = NagiosPlugin FilePath
---			 | InternalCommand (IO Response)
-
-dummyCommands :: [Command]
+dummyCommands :: Command c => [c]
 dummyCommands = [NagiosPlugin "/usr/bin/uptime"]
 
 channelSize :: Int

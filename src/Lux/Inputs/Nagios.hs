@@ -1,9 +1,17 @@
-module Lux.Inputs.Nagios where
+module Lux.Inputs.Nagios (
+	NagiosPlugin(..)
+) where
 
 import Data.Text
 import GHC.IO.Exception
+import System.Process
 
 import Lux.Core
+
+data NagiosPlugin = NagiosPlugin String
+
+instance Command NagiosPlugin where
+	runCheck = run
 
 parseNagiosOutput :: ExitCode -> String -> Response
 parseNagiosOutput code stdout =
@@ -23,3 +31,9 @@ determineStatus ExitSuccess = Ok
 determineStatus (ExitFailure 1) = Warning
 determineStatus (ExitFailure 2) = Critical
 determineStatus _ = undefined -- TODO Handling things outside of scope?
+
+run :: NagiosPlugin -> IO Response
+run (NagiosPlugin fp) =
+	do
+		(code, stdout, _) <- readProcessWithExitCode fp [] ""
+		return $ parseNagiosOutput code stdout
