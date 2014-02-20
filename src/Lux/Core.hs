@@ -1,8 +1,10 @@
 module Lux.Core where
 
-data Status = Ok
-			| Warning 
-			| Critical deriving (Enum, Show)
+data Status =
+	Ok
+	| Warning
+	| Critical
+	deriving (Enum, Show)
 
 type Description = String
 type MetricKey = String
