@@ -19,7 +19,7 @@ main = do
 			putStrLn "Starting output thread"
 			_ <- forkIO $ forever $ do
 				event <- BC.readChan channel
-				putStrLn $ show event
+				print event
 			putStrLn "Running"
 			forever $ threadDelay 1000 -- FIXME Block forever hack
 
