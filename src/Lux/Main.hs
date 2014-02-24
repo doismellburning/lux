@@ -1,5 +1,3 @@
-module Lux.Main where
-
 import Control.Concurrent
 import Control.Monad
 import qualified Control.Concurrent.BoundedChan as BC
@@ -39,7 +37,7 @@ commandThread channel command =
 				BC.writeChan channel result
 
 
-type LuxConfig = [Command] -- FIXME
+--type LuxConfig = [Command] -- FIXME
 
 data Command = NagiosPlugin FilePath
 --			 | InternalCommand (IO Response)
