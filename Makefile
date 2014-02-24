@@ -14,7 +14,7 @@ configure:
 
 .PHONY: configure
 run:
-	./dist/build/hogstash/hogstash
+	./dist/build/lux/lux
 
 .PHONY: clean
 clean:
