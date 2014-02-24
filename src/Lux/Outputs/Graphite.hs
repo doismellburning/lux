@@ -15,7 +15,4 @@ graphiteThread channel =
 		sink <- Graphite.open (C8.pack "foo") "bar" 8000
 		forkIO $ forever $ do
 			event <- BC.readChan channel
-			mapM (Graphite.push sink) $ measure event
-
-instance Measurable Response where
-	measure a = map (\(Metric k v) -> Gauge (C8.pack "") (C8.pack k) v) $ metrics a
+			mapM (Graphite.push sink) $ map (\(Metric k v) -> Gauge (C8.pack "") (C8.pack k) v) $ metrics event
