@@ -7,6 +7,7 @@ import System.Process
 
 import Lux.Core
 import Lux.Inputs.Nagios
+import Lux.Outputs.Graphite
 
 main = do
 			putStrLn "Starting Lux"
@@ -17,9 +18,7 @@ main = do
 			-- TODO Map below over LuxConfig commands
 			_ <- mapM (commandThread channel) dummyCommands
 			putStrLn "Starting output thread"
-			_ <- forkIO $ forever $ do
-				event <- BC.readChan channel
-				print event
+			_ <- graphiteThread channel
 			putStrLn "Running"
 			forever $ threadDelay 1000 -- FIXME Block forever hack
 

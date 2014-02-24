@@ -9,8 +9,8 @@ parseNagiosOutput :: ExitCode -> String -> Response
 parseNagiosOutput code stdout =
 	let
 		status = determineStatus code
-		(description, metrics) = parseNagiosOutput2 stdout
-	in Response status description metrics
+		(description, ms) = parseNagiosOutput2 stdout
+	in Response status description ms
 
 parseNagiosOutput2 :: String -> (String, [Metric])
 parseNagiosOutput2 stdout =

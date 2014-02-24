@@ -21,6 +21,8 @@ executable lux
                      , BoundedChan
                      , process
                      , text
+                     , network-metrics
+                     , bytestring
   hs-source-dirs:      src
   default-language:    Haskell2010
 
